@@ -2002,7 +2002,7 @@ dat$gamma = FELM_help$response
 To check if the dummy variables, indicating whether one specific engineer managed a specific project, are correlated with the ex post changes we can make use of the package `AER`. This package contains a function `ivreg()` to perform iv-regressions and allows us to test certain hypotheses afterwards. I will not explain how to use `ivreg()`, so if you want to know more, take a look at <a href="http://www.inside-r.org/packages/cran/AER/docs/ivreg" target = "_blank"> inside-r.org/packages/cran/AER/docs/ivreg</a>. The following code performs a regression of `gamma` on the ex post changes while using the dummy variables `re2`, ..., `re335` for the ex post changes `NPosAdj`, `NNegAdj`, `NEX`, `NDed` and `NOverrun`. 
 
 ```{r "6.2__1", optional=TRUE}
-# As this is an optional part but evaluated befor you start whit this chapter we need to 
+# As this is an optional part but evaluated befor you start with this chapter we need to 
 # read in the data and perform the same regression as done outside this chunk
 dat=read.dta("bidders.dta")
 FELM_help=felm(Nbidtotal_act ~ dist100 + rivaldist100 + fringe | c | 0 |c,data=dat)
