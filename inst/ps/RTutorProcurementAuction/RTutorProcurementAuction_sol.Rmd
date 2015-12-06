@@ -1760,9 +1760,9 @@ Now that we have described the general set up we continue with the reduced form 
 
 ## Exercise 6 -- Reduced Form Estimates of Adaption Costs
 
-In the next chapters we will estimate adaption costs. To do so we will re specify the regression model that you have seen in chapter 3.4 to match equation $(4)$ instead of $(5)$. Even though regressions like the one we did in chapter 3.4 are common, equation $(4)$ suggest that they suffer from two sources of miss specification. The first is that the dependent variable is the estimated total bid $b^i \cdot q^e$ instead of the actual total bid $b^i \cdot q^a$. Note that $b^i \cdot q^a$ was called `bidtotal_act`. The second is that we have ignored the anticipated changes to payments that result out of adjustments, extra work and deductions. To account for heteroskedasticity related to project size we will divide the actual total bid by $\bar{b}^{(n)} \cdot q^{a,(n)}$ which is the sum over item price estimate times actual bid. This variable is called `CCactprojsize` in our data set. If we divide the actual total bid by this estimate we get a normalized version of the actual total bid. This variables is called `Nbidtotal_act` in our data set. As in the chapters before we need to load the data first.  
+In the next chapters we are going to estimate adaption costs. To do so, we will re-specify the regression model that you have seen in chapter 3.4 to match equation $(4)$ instead of $(5)$. Even though regressions like the one we did in chapter 3.4 are common, equation $(4)$ suggests that those suffer from two sources of erroneous specification. The first is that the dependent variable is the estimated total bid $b^i \cdot q^e$ instead of the actual total bid $b^i \cdot q^a$. Note that $b^i \cdot q^a$ was called `bidtotal_act`. The second is that we have ignored the anticipated changes to payments that result from adjustments, extra work and deductions. To account for heteroskedasticity related to project size we will divide the actual total bid by $\bar{b}^{(n)} \cdot q^{a,(n)}$ which is the sum over the item price estimate times the actual bid. This variable is called `CCactprojsize` in our data set. If we divide the actual total bid by this estimate we get a normalized version of the actual total bid. This variable is called `Nbidtotal_act` in our data set. As we did in the chapters before, we need to load the data first here as well.  
 
-**Task:** To load the data set `bidders.dta` and get the example contract we used in the chapters before press `edit` and `check` afterwards.
+**Task:** To load the data set `bidders.dta` and get the example contract we used in the chapters before, press `edit` and `check` afterwards.
 
 ```{r "6_"}
 #< task
@@ -1773,7 +1773,7 @@ example = filter(dat, contract == "02-356604")
 
 Let us take a look at those new variables for our example contract.   
 
-**Task:** Just press check to get a better insight.
+**Task:** Press check to get a better insight.
 
 ```{r "6__1"}
 #< task
@@ -1781,8 +1781,8 @@ select(example, bidder, bidtotal, engestimate, normalized_bid, bidtotal_act, CCa
 #>
 ```
 
-Recall that in this specific contract contained only extra work but some item ran over while others ran under. In our example contract the actual total bid is slightly higher than the estimated one. The estimated fair value of this contract `engestimate` was below the actual project size `CCactprojsize` (that is in our case the sum over all items of the item price estimate times actual quantity).  
-Let us now build up the regression model to estimate adaption costs. To match equation $(4)$ and account for heteroskedasticity related to project size our left hand side of the regression will be `Nbidtotal_act`. The right hand side is the same as in chapter 3.4 but we need to add terms reflecting adaption to estimate adaption costs. Note that we have the data about them stored in `adjustments`, `extrawork` and `deductions` and that we differentiate between positive and negative adjustments which are stored as `posAdj` and `negAdj`. Again we like to normalize them by the actual project size `CCactprojsize`. The results are stored as `NPosAdj`, `NNegAdj`, `NEX` and `NDed`. Recall that `nbidders` was constant for one auction and thus needs to be included different now as you will see below. With this information we can set up an regression model:
+Bear in mind, that this specific contract contains only extra work but some item ran over while others ran under. In our example contract the actual total bid is slightly higher than the estimated one. The estimated fair value of this contract `engestimate` was below the actual project size `CCactprojsize` (that is in our case the sum over all items of the item price estimate times actual quantity).  
+Let us now build up the regression model to estimate adaption costs. To match equation $(4)$ and account for heteroskedasticity related to project size, our left hand side of the regression will be `Nbidtotal_act`. The right hand side will be the same as in chapter 3.4, but we need to add terms reflecting adaption to estimate adaption costs. Note that we have the data about these stored in `adjustments`, `extrawork` and `deductions` and that we differentiate between positive and negative adjustments which are stored as `posAdj` and `negAdj`. We would like to normalize them by dividing by the actual project size `CCactprojsize`. The results are stored as `NPosAdj`, `NNegAdj`, `NEX` and `NDed`. Recall that `nbidders` was constant for one auction and thus needs to be included differently now as you will see below. With this information we can set up a regression model:
 $$\begin{eqnarray}
 \textrm{Nbidtotal_act}^{(n)}_i =\gamma_n & + & \alpha_2 \cdot \textrm{dist100}^{(n)}_i + \alpha_3 \cdot \textrm{util}^{(n)}_i + \alpha_4 \cdot \textrm{fringe}_i \\\\
 & + & \alpha_5 \cdot \textrm{rivaldist100}^{(n)}_i + \alpha_6 \cdot \textrm{rivalutil}^{(n)}_i + \varepsilon^{(n)}_i
@@ -1790,22 +1790,22 @@ $$\begin{eqnarray}
 Where $\gamma_n$ is defined the following way:
 $$\begin{eqnarray}
 \gamma_n = \beta_0 & + & \beta_1 \cdot \textrm{nbidders}^{(n)} + \beta_2 \cdot \textrm{NPosAdj}^{(n)} + \beta_3 \cdot \textrm{NNegAdj}^{(n)} \\\\
-& + & \beta_4 \cdot \textrm{NEX}^{(n)} + \beta_5 \cdot \textrm{Nded}^{(n)} + \varepsilon_n
+& + & \beta_4 \cdot \textrm{NEX}^{(n)} + \beta_5 \cdot \textrm{NDed}^{(n)} + \varepsilon_n
 \end{eqnarray}$$
 
-Recall that we have seen in chapter 3.4 that the regression with project fixed effects seemed to best explain the bids we will use them to estimate the first part of the regression formula. After that we will explain the project fixed effects of this regression with the second part of the regression formula (all variables there are project specific).   
-Note that `nbbiders` is constant for one specific auction and thus moved in the part of the regression where we explicitly state the fixed effects. This regression looks similar to the regression form chapter 3.4 but is now consistent with $(4)$. This time we wish to also include over and underruns as a covariate in our regression to whip out those effects from the rest. To do so BHT have constructed a measure `sum_ccdbover`. This measure is just the sum over all items of  the actual quantity minus the estimated quantity divided by the estimated item price (you have seen it in chapter 4). Mathematically this can be written the following way: $\textrm{sum_ccdbover} = \sum_{i \in item} \frac{q^{a_i} - q^{e_i}}{\bar{b_i}}$. Again we would like to normalize this variable by the project size. The resulting normalized overrun measure is stored as `NOverrun`. Thus our regression model includes all needed terms and looks as the above one but $\gamma_n$ contains `NOverrun` now:
+Also bear in mind, that we have seen in chapter 3.4 that the regression with project fixed effects seemed to best explain the bids. We will use them to estimate the first part of the regression formula. After that we will explain the project fixed effects of this regression with the second part of the regression formula (all variables there are project specific).   
+Note that `nbbiders` is constant for one specific auction and thus was moved to the part of the regression where we explicitly state the fixed effects. This regression looks similar to the regression from chapter 3.4 but is now consistent with $(4)$. This time we wish to also include over- and underruns as a covariate in our regression to separate those effects from the rest. To do so BHT have constructed a measure `sum_ccdbover`. This measure is just the sum over all items of  the actual quantity minus the estimated quantity divided by the estimated item price (as you have seen in chapter 4). Mathematically this can be written the following way: $\textrm{sum_ccdbover} = \sum_{i \in item} \frac{q^{a_i} - q^{e_i}}{\bar{b_i}}$. Again we would like to normalize this variable by the project size. The resulting normalized overrun measure is stored as `NOverrun`. Thus, our regression model includes all the needed terms and looks as the above one but $\gamma_n$ contains `NOverrun` now:
 
 $$\begin{eqnarray}
 \gamma_n = \beta_0 & + & \beta_1 \cdot \textrm{nbidders}^{(n)} + \beta_2 \cdot \textrm{NPosAdj}^{(n)} + \beta_3 \cdot \textrm{NNegAdj}^{(n)} \\\\
-& + & \beta_4 \cdot \textrm{NEX}^{(n)} + \beta_5 \cdot \textrm{Nded}^{(n)} + \beta_6 \cdot \textrm{NOverrun}^{(n)} + \varepsilon_n
+& + & \beta_4 \cdot \textrm{NEX}^{(n)} + \beta_5 \cdot \textrm{NDed}^{(n)} + \beta_6 \cdot \textrm{NOverrun}^{(n)} + \varepsilon_n
 \end{eqnarray}$$
 
-Now there is one last thing we like to point out. In chapter 3.4 we have seen that the covariates `util` and `rivalutil` do not behave as expected and do not seem to be statistically significant in most settings. Thus we exclude them for the analysis of adaption costs. Now we can write our regression model the following:
+There is one last thing we would like to point out. In chapter 3.4 we have seen that the covariates `util` and `rivalutil` do not behave as expected and do not seem to be statistically significant in most settings. Thus we exclude them for the analysis of adaption costs. Now we can write our regression model as follows:
 $$\begin{eqnarray}
 \tag{6} \textrm{Nbidtotal_act}^{(n)}_i & = & \gamma_n + \alpha_2 \cdot \textrm{dist100}^{(n)}_i + \alpha_3 \cdot \textrm{fringe}_i + \alpha4 \cdot \textrm{rivaldist100}^{(n)}_i + \varepsilon^{(n)}_i \\\\
 \gamma_n & = & \beta_0 + \beta_1 \cdot \textrm{nbidders}^{(n)} + \beta_2 \cdot \textrm{NPosAdj}^{(n)} + \beta_3 \cdot \textrm{NNegAdj}^{(n)} \\\\
-& + & \beta_4 \cdot \textrm{NEX}^{(n)} + \beta_5 \cdot \textrm{Nded}^{(n)} + \beta_6 \cdot \textrm{NOverrun}^{(n)} + \varepsilon_n
+& + & \beta_4 \cdot \textrm{NEX}^{(n)} + \beta_5 \cdot \textrm{NDed}^{(n)} + \beta_6 \cdot \textrm{NOverrun}^{(n)} + \varepsilon_n
 \end{eqnarray}$$
 
 In the next chapters we are going to use $(6)$ with project fixed effects for the first part and standard OLS as well as instrumental variables for the second part. 
@@ -1826,10 +1826,10 @@ dat_c = filter(dat, winner == 1)
 
 We will first perform a project fixed effects regression of
 $$\textrm{Nbidtotal_act}^{(n)}_i =\gamma_n + \alpha_2 \cdot \textrm{dist100}^{(n)}_i + \alpha_3 \cdot \textrm{fringe}_i + \alpha4 \cdot \textrm{rivaldist100}^{(n)}_i + \varepsilon^{(n)}_i$$
-and the explain the project fixed effects $\gamma_n$ of this regression with our ex post changes and the number of bidders. This yields the following model 
+and then explain the project fixed effects $\gamma_n$ of this regression with our ex post changes and the number of bidders. This results in the following model 
 $$\begin{eqnarray}
 \gamma_n & = & \beta_0 + \beta_1 \cdot \textrm{nbidders}^{(n)} + \beta_2 \cdot \textrm{NPosAdj}^{(n)} + \beta_3 \cdot \textrm{NNegAdj}^{(n)} \\\\
-& + & \beta_4 \cdot \textrm{NEX}^{(n)} + \beta_5 \cdot \textrm{Nded}^{(n)} + \beta_6 \cdot \textrm{NOverrun}^{(n)} + \varepsilon_n
+& + & \beta_4 \cdot \textrm{NEX}^{(n)} + \beta_5 \cdot \textrm{NDed}^{(n)} + \beta_6 \cdot \textrm{NOverrun}^{(n)} + \varepsilon_n
 \end{eqnarray}$$
 which we will estimate with standard OLS. Now let us start with the first part where we want to perform a project fixed effects regression of `Nbidtotal_act` on `dist100`, `fringe` and `rivaldist100`.  
 
@@ -1846,9 +1846,9 @@ display("Your commands should look the following:
 #>
 ```
 
-Now we need to extract the predicted project fixed effects from this regression. Since it is not nicely described how one can do so i will do it for you. The `felm` object `FELM_help`contains a variable `response`. That is exactly what we need here. In the following chunk the entry's of `response` are stored in our data frame as `gamma`. This is the $\gamma_n$ that we need to perform the second regression.
+Now we need to extract the predicted project fixed effects from this regression. Since it is not nicely described how one can do so, I will do it for you. The `felm` object `FELM_help`contains a variable `response`. That is exactly what we need here. In the following chunk the entries of `response` are stored in our data frame as `gamma`. This is the $\gamma_n$ that we need to perform the second regression.
 
-**Task:** Perform a normal regression of `gamma` on `nbidders`, `NPosAdj`, `NNegAdj`, `NEX`, `NDed` and `NOverrun`. Use clustered standard errors where we want to cluster by `c` (that is by each contract/auction). After you have done so print out the summary statistics of the regressions `FELM_help` and `FELM`.
+**Task:** Perform a normal regression of `gamma` on `nbidders`, `NPosAdj`, `NNegAdj`, `NEX`, `NDed` and `NOverrun`. Use clustered standard errors where we want to cluster by `c` (that is by each contract/auction). After you have done so, print out the summary statistics of the regressions `FELM_help` and `FELM`.
 
 ```{r "6.1__2", results = 'asis'}
 #< task
@@ -1869,11 +1869,11 @@ display("Your command should look as follows:
 <br>
 
 #< award "Regressionmaster Lv. 5"
-  You have estimated adaption costs for the first time, congratulation.
+  You have estimated adaption costs for the first time, congratulations.
 #>
 
-The first regression `FELM_help` will not be interpreted here (since we have done so in more detail in chapter 3.4) and is shown just to get the full model. Note that the coefficients on `dist100`, `rivaldist100`, `fringe` and `nbidders` have the expected sign.  We find that the coefficient on `nbidders` of about $0.004$ is not significant. The coefficient on positive adjustments is $0.8$ and significant at the $0.1$% level. The coefficient on negative adjustments is $-1.7$ and is significant at the $5$% level. The other two adaptions are not significant. The coefficient on extra work is $0.17$ the one on deductions about $-1.4$. `NOverrun` is significant at the $0.1$% level and yields a coefficient of $0.006$.  
-But what do the coefficients on adaption costs tell us? Since this is the main focus of this problem set i will explain how we can interpret them in detail. First we need to recall the equation we like to estimate, which was the following:
+The first regression `FELM_help` will not be interpreted here (since we have done so in more detail in chapter 3.4) and is shown only to get the full model. Note that the coefficients on `dist100`, `rivaldist100`, `fringe` and `nbidders` have the expected sign.  We find that the coefficient on `nbidders` of about $0.004$ is not significant. The coefficient on positive adjustments is $0.8$ and significant at the $0.1$% level. The coefficient on negative adjustments is $-1.7$ is significant at the $5$% level. The other two adaptions are not significant. The coefficient on extra work is $0.17$, the one on deductions about $-1.4$. `NOverrun` is significant at the $0.1$% level and yields a coefficient of $0.006$.  
+But what do the coefficients on adaption costs tell us? Since this is the main focus of this problem set, I will explain how we can interpret them in detail. First we need to recall the equation we want to estimate, which we achieved with the following:
 
 $$\tag{4} \sum^T_{t=1} (b^i_t(s^i)-c^i_t)q^a_t =  \frac{\sum^T_{t=1} \frac{\partial b^i_t(s^i)}{\partial s^i}(q^a_t - \frac{\partial P[b^i]}{\partial b^i_t})}{\sum_{j \neq i} \frac{h_j(s^i)}{1 - H_j(s^i)}} - A - X - D + K + P[b^i]$$
 
@@ -1881,15 +1881,15 @@ The left hand side is the markup given actual quantities, the right hand side re
 
 $$\begin{eqnarray}
 \gamma_n & = & \beta_0 + \beta_1 \cdot \textrm{nbidders}^{(n)} + \beta_2 \cdot \textrm{NPosAdj}^{(n)} + \beta_3 \cdot \textrm{NNegAdj}^{(n)} \\\\
-& + & \beta_4 \cdot \textrm{NEX}^{(n)} + \beta_5 \cdot \textrm{Nded}^{(n)} + \beta_6 \cdot \textrm{NOverrun}^{(n)} + \varepsilon_n
+& + & \beta_4 \cdot \textrm{NEX}^{(n)} + \beta_5 \cdot \textrm{NDed}^{(n)} + \beta_6 \cdot \textrm{NOverrun}^{(n)} + \varepsilon_n
 \end{eqnarray}$$
 
-With these equations it may be more easy to see how we can access adaption costs. Equation $(4)$ from chapter 5 suggest that the marginal impact of an extra dollar of change identifies the adaption costs in our model. To compare the terms reflecting adaptions in our model with the terms reflecting adaptions from the regression model we can write one term under the other. Note that i substituted $A$ with $A_+ + A_-$.
+With these equations it may be easier to see how we can access adaption costs. Equation $(4)$ from chapter 5 suggests that the marginal impact of an extra dollar of change identifies the adaption costs in our model. To compare the terms reflecting adaptions in our model with the terms reflecting adaptions from the regression model, we can write one term below the other. Note that i substituted $A$ with $A_+ + A_-$.
 $$- A_+ - A_- - X - D + K + P[b^i]$$
-$$\beta_2 \cdot \textrm{NPosAdj}^{(n)} + \beta_3 \cdot \textrm{NNegAdj}^{(n)} + \beta_4 \cdot \textrm{NEX}^{(n)} + \beta_5 \cdot \textrm{Nded}^{(n)} + \beta_6 \cdot \textrm{NOverrun}^{(n)}$$
+$$\beta_2 \cdot \textrm{NPosAdj}^{(n)} + \beta_3 \cdot \textrm{NNegAdj}^{(n)} + \beta_4 \cdot \textrm{NEX}^{(n)} + \beta_5 \cdot \textrm{NDed}^{(n)} + \beta_6 \cdot \textrm{NOverrun}^{(n)}$$
 If we now use $K = \tau_{a_+} \cdot A_+ - \tau_{a_-} \cdot A_- + \tau_x \cdot X - \tau_d \cdot D$ and rearrange the terms we get the following:
 $$-A_+ \cdot (1 - \tau_{a_+}) -  A_- \cdot (1 + \tau_{a_-}) - X \cdot (1 - \tau_x) - D \cdot (1 + \tau_d) + P[b^i]$$
-$$\beta_2 \cdot \textrm{NPosAdj}^{(n)} + \beta_3 \cdot \textrm{NNegAdj}^{(n)} + \beta_4 \cdot \textrm{NEX}^{(n)} + \beta_5 \cdot \textrm{Nded}^{(n)} + \beta_6 \cdot \textrm{NOverrun}^{(n)}$$
+$$\beta_2 \cdot \textrm{NPosAdj}^{(n)} + \beta_3 \cdot \textrm{NNegAdj}^{(n)} + \beta_4 \cdot \textrm{NEX}^{(n)} + \beta_5 \cdot \textrm{NDed}^{(n)} + \beta_6 \cdot \textrm{NOverrun}^{(n)}$$
 Now it is easy to figure out which coefficient identifies what: 
 $$\beta_2 = - (1 - \tau_{a_+}) = 0.8 \textrm{ by FELM}$$
 $$\beta_3 = - (1 + \tau_{a_-}) = -1.7 \textrm{ by FELM}$$
@@ -1901,13 +1901,14 @@ $$ \tau_{a_-} = -(\beta_3 +1) = 0.7$$
 $$\tau_x = \beta_4 + 1 = 1.17$$
 $$\tau_d = -(\beta_5 + 1) = 0.4$$
 
-With this on hand we can easy interpret the results. First notice that if there where no adaption costs then $\beta_2 = \beta_3 = \beta_4 = \beta_5 = -1$. We find different coefficients and this suggest that adaption costs are prevalent in our data set.  
+With this on hand we can  interpret the results easily. First, notice that if there were no adaption costs, then $\beta_2 = \beta_3 = \beta_4 = \beta_5 = -1$ would apply. We find different coefficients and this suggests that adaption costs are prevalent in our data set.  
 
-Now let us interpret all the findings above. The coefficient of $0.8$ on $\beta_2$, which is significant at the $0.1$% level, yields $\tau_{a_+} = 1.8$ meaning that a bidder expects to spend $1.8$ dollars in adaption costs for every dollar they obtain in positive adjustment compensation. Thus a bidder will actually increase his own bid if he expects this additional ex post income. This may seem bizarre but you can think of the following: 
+Now let us interpret all the findings above. The coefficient of $0.8$ on $\beta_2$, which is significant at the $0.1$% level, yields $\tau_{a_+} = 1.8$ meaning that a bidder expects to spend $1.8$ dollars in adaption costs for every dollar they obtain in positive adjustment compensation. Thus a bidder will actually increase his own bid if he expects this additional ex post income. This may seem bizarre but consider the following: 
 Imagine Caltrans wants to impose negative adjustments of $-1$ dollar, which will be enforced if the firm does not contest. But the firm can pay haggling costs of $1.8$ dollars after which it will collect a positive adjustment of $1$ dollar instead. Since the costs of $1.8$ dollars are lower than the benefit of $2$ dollars this will result in an observation of $1$ dollar in positive adjustments ex post. But keep in mind that it actually increased the ex ante bid by $1.8$ dollars.  
 The coefficient of $-1.7$ on $\beta_3$, which is significant at the $1$% level, implies $\tau_{a_-} = 0.7$ suggesting that a bidder expects to spend $0.7$ dollars in adaption costs for every dollar in negative adjustments. Here you may think of haggling costs to limit the decrease of the item price done by Caltrans due to some overrun on an item.  
-The coefficient of $0.17$ on $\beta_4$, which is significant at the $5$% level, implies $\tau_x = 1.17$. This means that a bidder expecting one dollar of extra work assumes to spend $1.17$ dollars in adjustment costs for this one dollar. Here you can think of costs from disrupting the natural flow of work.  
-The coefficient of $-1.4$ on $\beta_5$, which is not significant, implies $\tau_d = 0.4$. This means that a bidder expecting one dollar of deductions assumes he needs to spend $0.4$ dollarss of adaption costs. First this result is not significant and second the imposed adaption costs are low thus for the moment we can assume that deductions may not bring that much of adaption costs with them.
+The coefficient of $0.17$ on $\beta_4$, which is significant at the $5$% level, implies $\tau_x = 1.17$. This means that a bidder expecting one dollar of extra work assumes to spend $1.17$ dollars in adjustment costs for this one dollar. Here you can think of costs from disrupting the natural workflow.  
+The coefficient of $-1.4$ on $\beta_5$, which is not significant, implies $\tau_d = 0.4$. This means that a bidder expecting one dollar of deductions assumes he needs to spend $0.4$ dollars in adaption costs. Firstly, this result is not significant and secondly, the imposed adaption costs are low, thus we can assume that deductions will not cause high adaption costs for the moment.  
+
 
 
 #< quiz "Adaption costs 12"
@@ -1928,11 +1929,11 @@ parts:
     failure: Not all answers correct. Try again.
 #>
 
-#< award "Understander"
+#< award "Quizmaster Lv. 4"
   You really understand what adaption costs are and how to interpret them.
 #>
 
-Now with these first estimates, if they are good or not, let us examine total adaption costs. This is done in the next code chunk. We declare our $\tau$'s that we computed using the OLS results and then compute the total adaption costs.  
+Now with these first estimates, no matter if they are good or not, let us examine total adaption costs. This is done in the next code chunk. We declare our $\tau$'s that we computed using the OLS results and then compute the total adaption costs.  
 
 **Task:** Just press `check` to get a summary of the total adaption costs, the actual project size and the total adaption costs normalized by the actual project size following our estimates from `FELM`. 
 
@@ -1949,8 +1950,9 @@ tab.summary(select(dat_c, total_adaption_costs, CCactprojsize, Ntotal_adaption_c
 ```
 <br>
 
-An average project, which was about $2.6$ million dollars, contained $473$ thousand dollars of adaption costs. That is nearly $14$ percent of the actual size of an average project. Noticing that these estimates, if they were perfect, assume that bidders have perfect foresight about adaptions meaning that our findings represent a lower bound. Thus our results suggest that adaption costs are high in public procurement auctions for highway construction work.  
-Recall that we used `effectplot()` to get an intuition on how big each effect in a regression is. We will do the same for adaption costs but as `effectplot()` does not work with `felm()` regressions right now we use a standard OLS regression instead. Note that this does not change the results on the coefficients. The only difference to `FELM` is that we do not use cluster standard errors here.
+An average project, which amounted to a total of about $2.6$ million dollars, contained $473$ thousand dollars of adaption costs. That is nearly $14$ percent of the actual size of an average project. Notice, that these estimates, if they were perfect, assume that bidders have perfect foresight about adaptions, in which case our findings would represent a lower bound for adaption costs. Thus our results suggest that adaption costs are high in public procurement auctions for highway construction work.  
+
+Recall that we used `effectplot()` to get an impression on how significant each effect in a regression is. We will do the same for adaption costs but as `effectplot()` does not work with `felm()` regressions right now we use a standard OLS regression instead. Note that this does not change the results of the coefficients. The only difference to `FELM` is that we do not use cluster standard errors here.
 
 **Task:** Just press `check` to get an intuition how big the effects of the ex post changes on the normalized actual total bid are.
 
@@ -1967,15 +1969,19 @@ Now we have done our first analysis of adaption costs where we used OLS to estim
 
 ## Exercise 6.2 -- Examine Adaption Costs while Accounting for Endogeneity of Ex Post Changes
 
-One concern with the analysis of adaption costs made in chapter 6.1 is that ex post changes may be correlated with the error term. This could be the case since there may be omitted costs observed by the bidders for which we can't control. If so, our error term would include them and thus A2, which was the assumption that the expected value of the error term of the regression is zero (see chapter 2.1), is violated. BHT mention the following story in their paper: A project in a more mountainous area will impose higher production costs and will be more likely to require changes due to the more challenging terrain. If so, projects with more changes have higher costs not because of adaption costs but because of higher production costs in such rough terrains. Another story is that complex projects impose serious delays and difficulties that increase the labor costs of production. If these delays come from adjustments and deductions then the increased bids may actually be a consequence of the increased production costs.  
-Recall that we have cost data from Caltrans for each project given actual quantities `CCactprojsize` we could run a regression of these costs on the actual total bid `bidtotal_act` and look how much variation we can explain with that. BHT do so and find an $R^2$ above $0.97$ meaning that more than $97$% of the variation in the actual total bid can be explained by Caltrans estimate of the costs`CCactprojsize`. BHT mention that with this result one could nearly be sure that any omitted costs will be negligible. Even though we will perform a regression that accounts for that. This can be done with an instrumental variable regression (iv-regression) if we find good instruments for the ex post changes. As we have five ex post changes we need at least five instruments. A good instrument must satisfy two conditions which can be found in Kennedy (2008, p. 141):    
+One concern with the analysis of adaption costs made in chapter 6.1 is that ex post changes may be correlated with the error term. This could be the case since there may be omitted costs observed by the bidders that can't be accounted for. If this would apply, our error term would include them and thus A2, which was the assumption that the expected value of the error term of the regression is zero (see chapter 2.1), was violated. BHT mention the following anecdote in their paper:  
+A project in a more mountainous area will impose higher production costs and will be more likely to require changes due to the more challenging terrain. If this is true, projects with more changes have higher costs not because of adaption costs but because of higher production costs in such rough terrains. Another factor is that complex projects impose serious delays and difficulties that increase the labor costs of production. If these delays come from adjustments and deductions then the increased bids may actually be a consequence of the increased production costs.  
+Remember that we have cost data from Caltrans for each project, given actual quantities `CCactprojsize` we could run a regression of these costs on the actual total bid `bidtotal_act` and find out how much variation we can explain with that. BHT do so and find an $R^2$ above $0.97$ meaning that more than $97$% of the variation in the actual total bid can be explained by Caltrans estimate of the costs`CCactprojsize`. BHT mention that with this result one could nearly be sure that any omitted costs will be negligible. Nonetheless we will perform a regression that accounts for that. This can be done with an instrumental variable regression (iv-regression) if we find good instruments for the ex post changes. As we have five ex post changes we need at least five instruments. A good instrument must satisfy two conditions which can be found in Kennedy (2008, p. 141):    
+
 - First, it must be uncorrelated with the error term.  
 - Second, it must be correlated (preferably high) with the regressor for which it is to serve as an instrument.  
 
-In our case that means that a good instrument must be uncorrelated with the unobserved project specific production costs but affect the ex post changes. BHT found instruments for that which are according to them good. They use the identity of the Caltrans project engineer who supervised the project. Thus we will use dummy variables indicating if one specific engineer managed that specific project. These variables are stored as `re2`, ..., `re335`. Note that we have $334$ different engineers and thus more than enough instruments for our five possible endogenous variables. Now we need to check the two conditions. 
-The first is not possible to check directly since it is an identifying assumption. But according to BHT it is plausible to assume that our instruments and the error term are uncorrelated since Caltrans assigns the engineers in the following procedure to an auction:  
-First the Caltrans engineering staff draws the plans and specifications for a project. Then the project is publicly advertised, plans and specifications are made available to bidders. The location of the project allows bidders to determine  the district office from which the engineer will be assigned. In one district office there are just a hand full of engineers and they are assigned to a project according to their expertise and availability. Mostly the engineer is assigned early and noted on the plans to be contacted by the bidders if questions occur. After the bids are submitted the winner is chosen and work begins. Changes to the project are made based upon work progress and site condition. Thus we know that our instrument is known at the time of auction and ex post changes occur only after that. BHT state that then according to Hansen et al. (1982) our instrument is valid since it cannot be correlated with the forecast error of payoff relevant variables.  
-The second assumption is easy to check with another package called `AER`. If you want to see how this can be done check the below info box. If not just assume that they are highly correlated with the ex post changes. As in every chapter let us load the data first.  
+In our case this means that a good instrument must be uncorrelated with the unobserved project specific production costs but affect the ex post changes. BHT found instruments for that which, according to them, fulfil this purpose well. They use the identity of the Caltrans project engineer who supervised the project. Thus we will use dummy variables indicating if one specific engineer managed that specific project. These variables are stored as `re2`, ..., `re335`. Note that we have $334$ different engineers and thus more than enough instruments for our five possible endogenous variables.  
+
+Now we need to check the two conditions.  
+The first is not possible to verify directly, since it is an identifying assumption. According to BHT though, it is plausible to assume that our instruments and the error term are uncorrelated since Caltrans assigns the engineers in the following procedure to an auction:  
+First the Caltrans engineering staff draws the plans and specifications for a project. Then the project is publicly advertised, plans and specifications are made available to bidders. The location of the project allows bidders to determine  which district office the engineer will be desputized from. In one district office there are just a handful of engineers and they are assigned to a project according to their expertise and availability. Most of the times, the engineer is assigned early on and the name is put on the plans to be contacted by the bidders if questions occur. After the bids are submitted, the winner is chosen and work begins. Changes to the project are made based upon work progress and site condition. Thus we know that our instrument is known at the time of auction and ex post changes occur only after that. BHT state that then according to Hansen et al. (1982) our instrument is valid since it cannot be correlated with the forecast error of payoff relevant variables.  
+The second assumption is easy to check with another package called `AER`. If you want to see how this can be done check the below info box. If not, just assume that they are highly correlated with the ex post changes. As in every chapter let us load the data first.  
 
 **Task:** To load the data set `bidders.dta`, create a data frame `example` containing our example contract, and create `dat_c` as before, press `edit` and `check` afterwards. In addition we compute the fixed effects regression of `Nbidtotal_act` on `dist100`, `rivaldist100` and `fringe` as in chapter 6.1 and store the predicted fixed effects of this regression as `gamma`. 
 
@@ -1993,7 +1999,7 @@ dat$gamma = FELM_help$response
 
 #< info "Check if Instruments are Correlated with Regressors"
 
-To check if the dummy variables, indicating if an engineer managed a specific project, are correlated with the ex post changes we can make use of the package `AER`. This package contains a function `ivreg()` to perform iv-regressions and allows us to test afterwards certain hypothesis. I will not explain how to use `ivreg()` thus if you want to know more take a look at <a href="http://www.inside-r.org/packages/cran/AER/docs/ivreg" target = "_blank"> inside-r.org/packages/cran/AER/docs/ivreg</a>. The following code performs a regression of `gamma` on the ex post changes while using the dummy variables `re2`, ..., `re335` for the ex post changes `NPosAdj`, `NNegAdj`, `NEX`, `NDed` and `NOverrun`. 
+To check if the dummy variables, indicating whether one specific engineer managed a specific project, are correlated with the ex post changes we can make use of the package `AER`. This package contains a function `ivreg()` to perform iv-regressions and allows us to test certain hypotheses afterwards. I will not explain how to use `ivreg()`, so if you want to know more, take a look at <a href="http://www.inside-r.org/packages/cran/AER/docs/ivreg" target = "_blank"> inside-r.org/packages/cran/AER/docs/ivreg</a>. The following code performs a regression of `gamma` on the ex post changes while using the dummy variables `re2`, ..., `re335` for the ex post changes `NPosAdj`, `NNegAdj`, `NEX`, `NDed` and `NOverrun`. 
 
 ```{r "6.2__1", optional=TRUE}
 # As this is an optional part but evaluated befor you start whit this chapter we need to 
@@ -2012,10 +2018,10 @@ IV_test = ivreg(formula, data=dat)
 
 ```
 
-If we use this function we can add the parameter `diagnostics=TRUE` to the `summary()` function from base R. Then the summary statistics will include three additional test.  
-- The weak instruments test, which tests if an instrument is correlated with the regressor. Here the null hypothesis is that the instruments are weak thus if the p-value is low we can be sure that the instrument is not weak.  
-- The Wu-Hausman test tests if iv-regression is just as consistent as standard OLS. Notice that if so, OLS should be preferred since it is more efficient. This test has the null hypothesis that they are equally consistent.  
-- The Sargan test is a test with the Null hypothesis that all instruments are exogenous (correlated with the error term). For this test we need at least two instruments per regressor. If the Sargan test is not rejected, i.e. has low p-values, it suggest that at least one instrument is endogenous. But if the test is not rejected we do not have prove that all instruments are exogenous (uncorrelated with the error term) thus you may think of this test the following way: Not being rejected by the Sargan test can be interpreted as a necessary condition for exogenous instruments but is no evidence for them.   
+If we use this function we can add the parameter `diagnostics=TRUE` to the `summary()` function from base R. Then the summary statistics will include three additional tests.  
+- The weak instruments test, which tests if an instrument is correlated with the regressor. Here the null hypothesis is that the instruments are weak, thus if the p-value is low we can be sure that the instrument is not weak.  
+- The Wu-Hausman test checks if iv-regression is just as consistent as standard OLS. Notice that if this is the case, OLS should be preferred since it is more efficient. This test has the null hypothesis that they are equally consistent.  
+- The Sargan test is a test with the Null hypothesis that all instruments are exogenous (correlated with the error term). For this test we need at least two instruments per regressor. If the Sargan test is not rejected, i.e. has low p-values, it suggests that at least one instrument is endogenous. But if the test is rejected we do not have prove that all instruments are exogenous (uncorrelated with the error term) thus you may think of this test the following way: Not being rejected by the Sargan test can be interpreted as a necessary condition for exogenous instruments but is no evidence for them.   
 
 The following code can be used to get such a summary statistic. 
 
@@ -2025,12 +2031,12 @@ summary(IV_test, diagnostics = TRUE)
 
 ```
 
-We see that the week instruments test is rejected for all ex post changes thus our instruments are correlated with the regressors. The Wu Hausman test is also rejected indicating that it is needed to use iv-regression here. The Sargan test is rejected meaning that at least one of our instruments is endogenous. This would mean that our instruments are not valid any more. But in our case we just want to replicate the findings of BHT and thus assume that the instruments are valid. Another problem with the Sargan test may be the amount of instruments used here since this test is pretty sensitive to the ratio of instruments on regressors.  
-If you want to dig deeper into iv-regressions i suggest to look at Kennedy (2008, chapter 9).
+We see that the weak instruments test is rejected for all ex post changes, thus our instruments are correlated with the regressors. The Wu Hausman test is also rejected indicating that it is needed to use iv-regression here. The Sargan test is rejected meaning that at least one of our instruments is endogenous. This would mean that our instruments are not valid anymore. But in our case we just want to replicate the findings of BHT and thus assume that the instruments are valid. Another problem with the Sargan test may be the amount of instruments used here, since this test is pretty sensitive to the ratio of instruments on regressors.  
+If you want to dig deeper into iv-regressions I suggest to look at Kennedy (2008, chapter 9).
 
 #>
 
-Now let us use iv-regression to estimate the second part of the model $(6)$. This can be done with the `felm()` function. To learn how just check the below info box.  
+Now let us use iv-regression to estimate the second part of the model $(6)$. This can be done with the `felm()` function. To learn how, just check the below info box.  
 
 #< info "IV-Regression with felm()"
 
@@ -2040,15 +2046,15 @@ The `felm()` function can be used to perform iv-regressions. Assume you want to 
 felm(y ~ x1 | 0 | (x2 | x3 ~ z2 + z3 + z4) | cluster_var, data=dat)
 ```
 
-Note that the first zero indicates that we do not use fixed effects, then we have the iv formula and after that the variable `cluster_var` which is the grouping variable for clustered standard errors.
+Note that the first zero indicates that we do not use fixed effects, then we have the iv formula followed by the variable `cluster_var` which is the grouping variable for clustered standard errors.
 
 If you want to know more about the `felm()` method you can check here <a href="http://www.rdocumentation.org/packages/lfe/functions/felm" target = "_blank"> rdocumentation.org/packages/lfe/functions/felm</a>
 
 #>
 
-This time we perform a regression of `gamma`, that we computed from `FELM_help`, on `nbidders`, `NPosAdj`, `NNegAdj`, `NEX`, `NDed` and `NOverrun`. Again we want to use cluster robust standard errors clustered by project.  
+This time we perform a regression of `gamma`, that we computed from `FELM_help`, on `nbidders`, `NPosAdj`, `NNegAdj`, `NEX`, `NDed` and `NOverrun`. Again, we want to use cluster robust standard errors clustered by project.  
 
-**Task:** Perform an iv-regression as described above. Store the result as `FELM_iv` and print out summary statistics. Since the iv options do not look nice i wrote a function `iv.formula.felm()` that you can use to get the full formula for this regression. Just call `iv.formula.felm()` in the part of `felm()` where you are asked to give a formula. The regression can be done if you uncomment the code and fill the ... with the right command. In addition give out the summary statistics of this regression. This computation may take a few seconds.
+**Task:** Perform an iv-regression as described above. Store the result as `FELM_iv` and print out summary statistics. Since the iv options do not look nice i wrote a function `iv.formula.felm()` that you can use to get the full formula for this regression. Just call `iv.formula.felm()` in the part of `felm()` where you are asked to give a formula. The regression can be done if you uncomment the code and fill the ... with the right command. In addition print out the summary statistics of this regression. This computation may take a few seconds.
 
 ```{r "6.2__4", results = 'asis'}
 #< task
@@ -2071,7 +2077,7 @@ display("Your second command should look the following:
   You performed your first iv-regression.
 #>
 
-Now all results on the ex post changes are not significant at standard levels except for `NPosAdj` and `NOverrun` (before we hat significant results also for `NNegAdj`). The coefficients stayed nearly the same as in the other setting except for deductions. Here the coefficient decreased to $-2.6$. Let us now compute the total adaption costs implied by these coefficients. 
+Now all results on the ex post changes are not significant at standard levels except for `NPosAdj` and `NOverrun` (before this we had significant results also for `NNegAdj`). The coefficients stayed nearly the same as in the other setting except for deductions. Here the coefficient decreased to $-2.6$. Let us now compute the total adaption costs implied by these coefficients. 
 $$\beta_2 = - (1 - \tau_{a_+}) = 0.9 \textrm{ by FELM_iv}$$
 $$\beta_3 = - (1 + \tau_{a_-}) = -1.5 \textrm{ by FELM_iv}$$
 $$\beta_4 = - (1 - \tau_x)  = 0.23 \textrm{ by FELM_iv}$$
@@ -2100,7 +2106,7 @@ tab.summary(select(dat_c, total_adaption_costs, CCactprojsize, Ntotal_adaption_c
 <br>
 
 We find that the total adaption costs resulting from our estimates average at $508$ thousand dollars. This is nearly $15$% of the actual project size.  
-If we assume that bidders have perfect foresight of adaptions then they will include adaption costs into their total bid. Thus one last question we can answer now is how many percent of the total bid can be related to adaption costs. We just need to  divide the total adaption costs by the total bid.  
+If we assume that bidders have perfect foresight of adaptions we must assume that they will include adaption costs into their total bid. Thus, one last question we can answer now is how many percent of the total bid can be attributed to adaption costs. We just need to  divide the total adaption costs by the total bid.  
 
 **Task:** Do the above calculus and store the result as `adaption_costs_in_bid` in `dat_c`. Then compute the mean of this variable.
 ```{r "6.2__6"}
@@ -2120,8 +2126,8 @@ display("Your second command should look the following:
 ```
 
 
-According to our regression and the resulting $\tau$'s we find that adaption costs account for $13$% of the winning total bid.  
-Recall our example contract (`contract` = "02-356604") from the chapters in the beginning. Let us take a look at the ex post changes and the actual project size.  
+According to our regression and the resulting $\tau$'s we find that adaption costs account for $13$% of the winning bid.  
+Remember our example contract (`contract` = "02-356604") from the chapters in the beginning. Let us take a look at the ex post changes and the actual project size.  
 
 **Task:** Just pres `check` to get the above data.
 
@@ -2134,7 +2140,7 @@ select(example, bidder, posAdj, negAdj, extrawork, deductions, CCactprojsize)
 
 Below you find a quiz about adaption costs in this contract. To answer it you may use the below code chunk.
 
-**Task:** You can enter what ever you think is needed to solve the below quiz here.
+**Task:** You can enter what ever you think is needed to solve the quiz here.
 
 ```{r "6.2__8"}
 #< task
@@ -2142,9 +2148,9 @@ Below you find a quiz about adaption costs in this contract. To answer it you ma
 #>
 #< hint 
 display("To solve the following quiz note that the only ex post change leading to 
-        adaption costs was extra work and thus you can use the following:
+        adaption costs was extra work, thus you can use the following:
         tau_x*example$extrawork
-        The second question can be answered if you take the following result times 100
+        The second question can be answered if you multiply the following result by 100
         (tau_x*example$extrawork)/example$CCactprojsize ")
 #>
 
@@ -2152,12 +2158,12 @@ display("To solve the following quiz note that the only ex post change leading t
 
 #< quiz "Adaption costs example"
 parts:
-  - question: 1. If we use the last estimates of adaption costs, what where the total adaption costs in our example contract ?
+  - question: 1. If we use the last estimates of adaption costs, what were the total adaption costs in our example contract ?
     answer: 16991.61
     roundto: 1
     success: Great, your answer is correct!
     failure: Try again.
-  - question: 2. State those total adaption costs as percent of the actual project size?
+  - question: 2. State those total adaption costs as a percentage of the actual project size
     answer: 1.690595
     roundto: 0.1
     success: Great, all answers are correct!
@@ -2165,29 +2171,29 @@ parts:
 #>
 
 #< award "Finisher"
-  Congratulation, you made it through the whole problem set. I hope you enjoyed it.
+  Congratulations, you made it through the whole problem set. I hope you enjoyed it.
 #>
 
-Now we are finished with reduced form estimations of the adaption costs. The next chapter gives a review about our findings during this problem set.  
+Now we are finished with reduced form estimations of the adaption costs. The next chapter gives a review about our findings during this problem set.   
+
 
 
 ## Exercise 7 -- Conclusion
 
-We were interested in finding out if adaption costs prevalent in public procurement auctions for highway construction work in California. How did we get there? We started by showing that incentives to skew bids are not a major determinant of the bids observed and thus we can ignore this problem. Next we took a look at characteristics influencing the bids. Here we distinguished between measures of them that influence the costs and those that influence the market power of a bidder. For the costs we found that the distance to the project and the size of a firm work well where as the utilization rate seemed to not fulfill our expectation and thus was excluded. For the market power we used the minimal distance among a firms rivals and the number of bidders in an auction. We took a look at the minimal utilization rate among a firms rivals but found out that it didn't work as expected and thus was excluded for further analysis. After we showed that our four measures of characteristics influencing the bids where good measures we introduced adaptions. We used mainly three adaptions made to the contract. The first were adjustments of compensation, the second extra work and the third deductions. In addition we looked at the total dollar value of over and underruns on items since we wanted to exclude the effect of them from the impact of adaptions on the bids. Subsequently we made up a model to describe  empirical bidding behavior that we could estimate afterwards. Then we used different regression techniques accounting for possible problems while estimating adaption costs.  
+We set ourselves the goal of finding out if adaption costs are prevalent in public procurement auctions for highway construction work in California. How did we reach a conclusion? We started by showing that incentives to skew bids are not a major determinant of the bids observed and thus could be ignored. Next we took a look at characteristics influencing the bids. Here we distinguished between measures of those that influence the costs and those that influence the market power of a bidder. For the costs we found that the distance to the project and the size of a firm work well whereas the utilization rate seemed to not fulfill our expectation and thus was excluded. For the market power we used the minimal distance among a firm's rivals and the number of bidders in an auction. We took a look at the minimal utilization rate among a company's competitors but found out that it didn't work as expected and thus was excluded from further analysis. After we showed that our four measures of characteristics influencing the bids were good, we introduced adaptions. We used mainly three adaptions made to the contract. The first were adjustments of compensation, the second extra work and the third deductions. In addition we looked at the total dollar value of over- and underruns on items, since we wanted to exclude the effect of these from the impact of adaptions on the bids. Subsequently, we made up a model to describe  empirical bidding behavior which we could estimate afterwards. Then we used different regression techniques accounting for possible problems while estimating adaption costs.  
 
-We found out that a bidder expected to spend $1.9$ dollars in adaption costs for every dollar he obtained in positive adjustment compensation. If a bidder faced  one dollar of negative adjustments he expected to spend $0.5$ dollars in adaption costs. Every dollar of extra work brought expected adaption costs of $1.23$ dollars. One dollar of deductions lead to expected adaption costs of $1.6$ dollars. We stated that the highway construction industry is highly competitive and thus bidders included those expected adaption costs into their bids ex ante. This implied that about $13$ percent of the total bid among winners can be traced back to adaption costs. Additionally we stated that adaption costs are between $473$ and $508$ thousand dollars on an average project. Such an average project had a actual value of $2.6$ million dollars and thus adaption costs made $14$ to $15$ percent of the actual dollar value of a project. Thus we showed that adaption costs are substantial and should not be ignored. One obvious policy implication is to put more effort into estimating and specifying projects before auction. Since our data lacked information about the costs of estimating and specifying projects we could not investigate on costs and benefits of adding more engineering efforts ex ante.  
+We found out that a bidder expected to spend $1.9$ dollars in adaption costs for every dollar he obtained in positive adjustment compensation. If a bidder faced  one dollar of negative adjustments, he expected to spend $0.5$ dollars in adaption costs. Every dollar of extra work brought expected adaption costs of $1.23$ dollars. One dollar of deductions lead to expected adaption costs of $1.6$ dollars. We stated that the highway construction industry is highly competitive and thus bidders included those expected adaption costs into their bids ex ante. This implied that about $13$ percent of the total bid among winners can be traced back to adaption costs. Additionally, we stated that adaption costs are between $473$ and $508$ thousand dollars on an average project. Such an average project had an actual value of $2.6$ million dollars and thus adaption costs constituted $14$ to $15$ percent of the actual dollar value of a project. Thus we showed that adaption costs are substantial and should not be ignored. One obvious implication is to put more effort into estimating and specifying projects before auction. Since our data lacked information about the costs of estimating and specifying projects we could not investigate on costs and benefits of adding more engineering efforts ex ante.  
 
-In addition to our approach BHT formulate a structural model to estimate adaption costs. This approach is based on the two-step nonparametric estimators discussed in Elyakime et al. (1994) and in Guerre, Perrigne, and Vuong (2000). If you want a good overview on structural estimation in auction theorie I suggest you to take a look at the book of Paarsch, Harry J. and Hang Hong (2006, chapter 4) where the whole procedure is explained in more detail. In a first step the density and the cumulative distribution function of the bid distributions are estimated for each project. In the second step the penalty from skewed bids and the adaption cost coefficients, $\tau_{a_+}, \; \tau_{a_-}, \; \tau_x$ and $\tau_d$, are estimated using the FOC $(4)$ to form a generalized method of moments estimator. BHT find that $\tau_{a_+} = 2.1$, $\tau_{a_-} = 2.4$, $\tau_x = 1.23$ and $\tau_d = 1.5$. The values are close to the reduced form estimates of adaption costs except for negative adjustments. Maybe, at some later time,  there will be a another problem set explaining the structural approach and findings of BHT.  
+In addition to our approach BHT formulate a structural model to estimate adaption costs. This approach is based on the two-step nonparametric estimators discussed in Elyakime et al. (1994) and in Guerre, Perrigne, and Vuong (2000). If you want a good overview on structural estimation in auction theory I suggest you to take a look at the book of Paarsch, Harry J. and Hang Hong (2006, chapter 4) where the whole procedure is explained in more detail. In a first step the density and the cumulative distribution function of the bid distributions are estimated for each project. In the second step the penalty from skewed bids and the adaption cost coefficients, $\tau_{a_+}, \; \tau_{a_-}, \; \tau_x$ and $\tau_d$, are estimated using the FOC $(4)$ to form a generalized method of moments estimator.!!!!!> BHT find that $\tau_{a_+} = 2.1$, $\tau_{a_-} = 2.4$, $\tau_x = 1.23$ and $\tau_d = 1.5$. The values are close to the reduced form estimates of adaption costs except for negative adjustments. In the future there may be a another problem set explaining the structural approach and findings of BHT.  
 
 
-If you want to see all awards, that you  collected during this problem set, just press `edit` and `check` afterwards in the below code block. There where a total of $13$ awards to be earned.  
+If you want to see the entirety of the awards that you  collected during this problem set, just press `edit` and `check` afterwards in the below code block. There where a total of $13$ awards to be earned.  
 
 ```{r "7_"}
 #< task
 awards()
 #>
 ```
-
 
 ## Exercise 8 -- References
 
