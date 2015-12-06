@@ -1118,7 +1118,7 @@ $$\begin{eqnarray}
 & + & \beta_4 \cdot \textrm{NEX}^{(n)} + \beta_5 \cdot \textrm{NDed}^{(n)} + \beta_6 \cdot \textrm{NOverrun}^{(n)} + \varepsilon_n
 \end{eqnarray}$$
 
-In the next chapters we are going to use $(6)$ with project fixed effects for the first part and standard OLS as well as instrumental variables for the second part. 
+In the next chapters we are going to estimate $(6)$ with project fixed effects for the first part and standard OLS as well as instrumental variables for the second part. 
 
 
 ## Exercise 6.1 -- Examine Adaption Costs using Project Fixed Effects

@@ -1808,7 +1808,7 @@ $$\begin{eqnarray}
 & + & \beta_4 \cdot \textrm{NEX}^{(n)} + \beta_5 \cdot \textrm{NDed}^{(n)} + \beta_6 \cdot \textrm{NOverrun}^{(n)} + \varepsilon_n
 \end{eqnarray}$$
 
-In the next chapters we are going to use $(6)$ with project fixed effects for the first part and standard OLS as well as instrumental variables for the second part. 
+In the next chapters we are going to estimate $(6)$ with project fixed effects for the first part and standard OLS as well as instrumental variables for the second part. 
 
 
 ## Exercise 6.1 -- Examine Adaption Costs using Project Fixed Effects
@@ -2163,7 +2163,7 @@ parts:
     roundto: 1
     success: Great, your answer is correct!
     failure: Try again.
-  - question: 2. State those total adaption costs as a percentage of the actual project size
+  - question: 2. State those total adaption costs as a percentage of the actual project size.
     answer: 1.690595
     roundto: 0.1
     success: Great, all answers are correct!
