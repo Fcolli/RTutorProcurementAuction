@@ -2,7 +2,9 @@ This package constitutes an interactive R problem set based on the RTutor packag
 
 In the paper "Bidding for Incomplete Contracts: An Empirical Analysis of Adaption Costs", written by Patrick Bajari, Stephanie Houghton and Steven Tadelis (2014), the authors examine adaption costs using data about highway construction auctions in California. Their
 main finding is that adaption costs are significant and account for up to 14 percent of the winning bid. In this problem set you will be guided through their main findings.  Besides, you will gain knowledge about R and 
-economic methods.
+economic methods.  
+
+The paper can be found under the link https://www.aeaweb.org/articles.php?doi=10.1257/aer.104.4.1288
 
 ## 1. Installation
 
