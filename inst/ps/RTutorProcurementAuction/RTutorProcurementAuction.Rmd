@@ -22,7 +22,7 @@ Welcome to this problem set which is part of my master thesis at the University 
 An Empirical Analysis of Adaption Costs"**, written by Patrick Bajari, Stephanie Houghton and Steven Tadelis, published in 2014 in the American Economic Review 104 (4) to which I will refer by BHT during this problem set.
 You can download the paper from <a href="https://www.aeaweb.org/articles.php?doi=10.1257/aer.104.4.1288" target = "_blank"> aeaweb.org/articles.php?doi=10.1257/aer.104.4.1288</a> to get more detailed information. The Stata and Matlab code can be downloaded from the same page.  
 
-You do not need to solve the exercises in the given order but it is recommended to do so as it makes most sense. Moreover later exercises expect earlier received knowledge from you. Within one chapter you need to solve the tasks in the given order except from the ones that are optional (like all quizzes that you will find and some additional code blocks). How the problem set works will be explained starting with the first task. How to solve this problem set on your own computer is described here <a href="https://github.com/Fcolli/RTutor-procurement-auction" target = "_blank"> github.com/Fcolli/RTutor-procurement-auction</a>.  
+You do not need to solve the exercises in the given order but it is recommended to do so as it makes most sense. Moreover later exercises expect earlier received knowledge from you. Within one chapter you need to solve the tasks in the given order except from the ones that are optional (like all quizzes that you will find and some additional code blocks). How the problem set works will be explained starting with the first task. How to solve this problem set on your own computer is described here <a href="https://github.com/Fcolli/RTutor-procurement-auction" target = "_blank"> github.com/Fcolli/RTutorProcurementAuction</a>.  
 
 
 
@@ -227,7 +227,7 @@ info("Linear Regressions with felm()") # Run this line (Strg-Enter) to show info
 
 To show summary statistics of regressions we will make use of the function `stargazer()` from the `stargazer` package. In the next task you will see how this function looks like.
 
-**Task:** To show the summary statistics of `OLS`  press ´check´.
+**Task:** To show the summary statistics of `OLS`  press ?check?.
 
 ```{r "2__4",results='asis'}
 stargazer(OLS, 
