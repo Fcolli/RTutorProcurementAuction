@@ -1,0 +1,12 @@
+Package: RTutorProcurementAuction
+Type: Package
+Title: RTutor-Public-Procurement-Auction
+Version: 0.1
+Date: 2015-06-12
+Author: Frederik Collin
+Maintainer: Frederik Collin <frederik.collin@uni-ulm.de>
+Description: RTutor problem set RTutorProcurementAuction
+License: 
+	Problem set content: Creative Commons (CC BY-SA)
+	Package code: GPL >= 2.0
+Depends: RTutor, foreign, dplyr, lfe, stargazer, sandwich, XML, leaflet, regtools, AER

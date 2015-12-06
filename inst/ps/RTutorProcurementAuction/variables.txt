@@ -1,0 +1,57 @@
+orgvar | var | descr
+
+contract | contract | Contains the unique name of a contract/auction 
+bidderid | bidderid |  A unique number for every bidder 
+bidder | bidder | The name of a bidder
+bidrank | bidrank | The rank a bidder achieved in an specific auction
+nbidders | nbidders | The number of bidders in an specific auction
+winner | winner | A variable indicating if a bidder has won the auction. It equals one if he has won, zero else
+itemcode | itemcode | Unique number for each different item
+description | description | A detailed description of each item
+estq | estq | The estimated quantity of an item made by Caltrans
+CCDBprice | CCDBprice | The estimated fair price of an item made by Caltrans
+unitbid | unitbid | The per unit bid on a specific item submitted by a bidder
+bidtotal_est | bidtotal_est | The estimated total bid of an bidder. This is just the sum over all items of the unit bid times the estimated quantity
+bidtotal_act | bidtotal_act | The actual total bid of an bidder. This is just the sum over all items of the unit bid times the actual quantity
+actq | actq | The actual quantity of an item
+pctover_q | pctover_q | A measure of overrun and underrun of items given in percent
+NCunitbid | NCunitbid | The unit bid on an item divided the estimated price of this item 
+itembid_est | itembid_est | The estimated price of an item made by Caltrans
+
+bidtotal | bidtotal | The total bid of an bidder. This is just the sum over all items of the unit bid times the estimated quantity. Sometimes we use this as his score during the auction
+engestimate | engestimate | The sum over all items of the estimated price time estimated quantity. You can think of this as the fair value
+normalized_bid | normalized_bid | The total bid divided by Caltrans estimated fair value
+address | address | The location of a bidder
+location | location | The location of the project
+distance | distance | The distance of a bidder to the project measured in miles
+dist100 | dist100 | The distance of a bidder to the project measured in 100 miles
+backlog_allyears | backlog_allyears | The remaining dollar value of all projects won but not jet completed by the time a new bid is submitted
+capacity | capacity | The maximum backlog observed for a firm over all observations
+util | util | The utilization rate of a firm
+fring | fringe | Dummy for the market share of a firm. It equals one if the market share is below one percent, zero else
+rivaldist100 | rivaldist100 | The minimal distance to the project among a bidders rivals measured in 100 miles
+rivaldist | rivaldist | The minimal distance to the project among a bidders rivals measured in miles
+rivalutil | rivalutil | The minimal utilization rate among a bidders rivals
+adjustments | adjustments | The dollar value of all adjustments made for one contract
+extrawork | extrawork | The dollar value of extra work performed in one contract
+deductions | deductions | The dollar value of all deductions assigned in one contract
+normalized_adjustments | normalized_adjustments | Adjustments divided by Caltrans fair value of a project
+normalized_extrwork | normalized_extrwork | Extra work divided by Caltrans fair value of a project
+normalized_deductions | normalized_deductions | Deductions divided by Caltrans fair value of a project
+diff | diff | The final payment minus the winning bid
+normalized_diff | normalized_diff | The final payment minus the winning bid normalized by the fair value estimated by Caltrans
+sum_ccdbover | sum_ccdbover | The sum over all items of actual minus estimated quantity divided by the CCDB price estimate. This measures the dollar value of all overruns and underruns for one contract
+normalized_sum_ccdbover | normalized_sum_ccdbover | sum_ccdbover normlaized by the fair value estimate
+c | c | A unique number for every project/auction/contract
+CCactprojsize | CCactprojsize | The sum over all items of item price estimate times actual bid. You can think of this as the actual project size
+Nbidtotal_act | Nbidtotal_act | The total bid normalized by the actual project size
+posAdj | posAdj | The dollar value of positive adjustments
+negAdj | negAdj | The dollar value of negative adjustments (which is of course negative)
+NPosAdj | NPosAdj | The dollar value of positive adjustments normalized by the actual project size
+NNegAdj | NNegAdj | The dollar value of negative adjustments normalized by the actual project size
+NEX | NEX | The dollar value of extra work normalized by the actual project size
+NDed | NDed | The dollar value of deductions normalized by the actual project size
+NOverrun | NOverrun | The dollar value of all overruns and underrun for one contract normalized by the actual project size.
+
+gamma | gamma | The predicted values of our regression without the fixed effcts
+

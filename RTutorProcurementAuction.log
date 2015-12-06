@@ -1,0 +1,4 @@
+{"type":["init_ps"],"time":["2015-12-06 12:31:05"],"user":["GUEST"],"umph":[1449401465.5618],"ok":[true]}
+,
+{"type":["check_chunk"],"time":["2015-12-06 12:31:21"],"user":["Jon Doe"],"umph":[1449401481.4102],"ok":[true],"chunk":[64],"ex":[12],"e.ind":[0],"code":["dat=read.dta(\"bidders.dta\")\nexample = filter(dat, contract == \"02-356604\")"],"message":[""]}
+,
