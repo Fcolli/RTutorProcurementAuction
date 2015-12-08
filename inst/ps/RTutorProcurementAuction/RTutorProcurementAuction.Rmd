@@ -3,7 +3,7 @@
 
 ```{r include=FALSE}
 
-ps.dir =  'C:/Users/Freddy/Desktop/MasterarbeitGitHub' # set to the folder in which this file is stored
+ps.dir =  'C:/Users/Freddy/Desktop/MasterarbeitGitHub/RTutorProcurementAuction/inst/ps/RTutorProcurementAuction' # set to the folder in which this file is stored
 ps.file = 'RTutorProcurementAuction.Rmd' # set to the name of this file
 user.name = '' # set to your user name
 
@@ -22,7 +22,7 @@ Welcome to this problem set which is part of my master thesis at the University 
 An Empirical Analysis of Adaption Costs"**, written by Patrick Bajari, Stephanie Houghton and Steven Tadelis, published in 2014 in the American Economic Review 104 (4) to which I will refer by BHT during this problem set.
 You can download the paper from <a href="https://www.aeaweb.org/articles.php?doi=10.1257/aer.104.4.1288" target = "_blank"> aeaweb.org/articles.php?doi=10.1257/aer.104.4.1288</a> to get more detailed information. The Stata and Matlab code can be downloaded from the same page.  
 
-You do not need to solve the exercises in the given order but it is recommended to do so as it makes most sense. Moreover later exercises expect earlier received knowledge from you. Within one chapter you need to solve the tasks in the given order except from the ones that are optional (like all quizzes that you will find and some additional code blocks). How the problem set works will be explained starting with the first task. How to solve this problem set on your own computer is described here <a href="https://github.com/Fcolli/RTutorProcurementAuction" target = "_blank"> github.com/Fcolli/RTutor-procurement-auction</a>.  
+You do not need to solve the exercises in the given order but it is recommended to do so as it makes most sense. Moreover later exercises expect earlier received knowledge from you. Within one chapter you need to solve the tasks in the given order except from the ones that are optional (like all quizzes that you will find and some additional code blocks). How the problem set works will be explained starting with the first task. How to solve this problem set on your own computer is described here <a href="https://github.com/Fcolli/RTutorProcurementAuction" target = "_blank"> github.com/Fcolli/RTutorProcurementAuction</a>.  
 
 
 
@@ -209,7 +209,7 @@ Uppercase $n$ indicates the contract and lowercase $i$ the bidder. $\beta_1$ the
 
 **Task:** Read in the data `bidtitems.dta` as you have done in the chapter before. Store it as `dat`.
 
-```{r "2_"}
+```{r "2"}
 # Enter your command here
 ```
    
@@ -290,7 +290,7 @@ Let us now go back to the regression from chapter 2. We assume that our regressi
 
 **Task:** To read in the data `biditems.dta` and perform the OLS regression as in the chapter before press `edit` and `check` afterwards.
 
-```{r "2_1_"}
+```{r "2_1"}
 dat = read.dta("biditems.dta")
 OLS=felm(NCunitbid ~ pctover_q, data=dat)
 ```
@@ -403,7 +403,7 @@ This chapter will present a good measure of a bidders markup. While we are doing
 
 **Task:** Read in the data `bidders.dta`. To do so just press `edit` and `check` afterwards.
 
-```{r "3_1_"}
+```{r "3_1"}
 dat=read.dta("bidders.dta")
 ```
 
@@ -450,7 +450,7 @@ As in the chapters before we need to load the data first.
 
 **Task:** Read in the data `bidders.dta` and create the example data of contract `"02-356604"`. Again you just need to press `edit` and `check` afterwards.
 
-```{r "3_2_"}
+```{r "3_2"}
 dat=read.dta("bidders.dta")
 example = filter(dat, contract == "02-356604")
 ```
@@ -589,7 +589,7 @@ In this chapter we are going to discuss measures reflecting the market power of 
 
 **Task:** To load the data set `bidders.dta` and create our example data press `edit` and `check` afterwards.
 
-```{r "3_3_"}
+```{r "3_3"}
 dat=read.dta("bidders.dta")
 example = filter(dat, contract == "02-356604")
 ```
@@ -668,7 +668,7 @@ As in the chapters before we need to load the data first.
 
 **Task:** To load the data set `bidders.dta` press `edit` and `check` afterwards.
 
-```{r "3_4_"}
+```{r "3_4"}
 dat=read.dta("bidders.dta")
 ```
 
@@ -861,7 +861,7 @@ Now that you know the three new types of adaptions, it is time for a short quiz 
 
 **Task:** To load the data set `bidders.dta` and extract the information of our example contract "02-356604" just press `edit` and `check` afterwards.
 
-```{r "4_"}
+```{r "4"}
 dat=read.dta("bidders.dta")
 example = filter(dat, contract == "02-356604")
 ```
@@ -1015,7 +1015,7 @@ Assume that we find in our later analysis that $\tau_{a_+}$ equals $0.5$. That m
 
 **Task:** To answer the below quiz you can enter what ever you need here.
 
-```{r "5_",optional=TRUE}
+```{r "5",optional=TRUE}
 # Enter your code here
 ```
 
@@ -1079,7 +1079,7 @@ In the next chapters we are going to estimate adaption costs. To do so, we will 
 
 **Task:** To load the data set `bidders.dta` and get the example contract we used in the chapters before, press `edit` and `check` afterwards.
 
-```{r "6_"}
+```{r "6"}
 dat=read.dta("bidders.dta")
 example = filter(dat, contract == "02-356604")
 ```
@@ -1128,7 +1128,7 @@ In this chapter we estimate $(6)$ with project fixed effects. But let us first l
 
 **Task:** To load the data set `bidders.dta` and create the a data set containing only one observation per project `dat_c`, press `edit` and `check` afterwards.
 
-```{r "6_1_"}
+```{r "6_1"}
 dat=read.dta("bidders.dta")
 dat_c = filter(dat, winner == 1)
 ```
@@ -1249,7 +1249,7 @@ The second assumption is easy to check with another package called `AER`. If you
 
 **Task:** To load the data set `bidders.dta`, create a data frame `example` containing our example contract, and create `dat_c` as before, press `edit` and `check` afterwards. In addition we compute the fixed effects regression of `Nbidtotal_act` on `dist100`, `rivaldist100` and `fringe` as in chapter 6.1 and store the predicted fixed effects of this regression as `gamma`. 
 
-```{r "6_2_"}
+```{r "6_2"}
 dat=read.dta("bidders.dta")
 dat_c = filter(dat, winner == 1)
 example = filter(dat_c, contract == "02-356604")
@@ -1347,7 +1347,7 @@ In addition to our approach BHT formulate a structural model to estimate adaptio
 
 If you want to see the entirety of the awards that you  collected during this problem set, just press `edit` and `check` afterwards in the below code block. There where a total of $13$ awards to be earned.  
 
-```{r "7_"}
+```{r "7"}
 awards()
 ```
 
