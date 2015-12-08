@@ -3,7 +3,7 @@
 
 ```{r include=FALSE}
 
-ps.dir =  'C:/Users/Freddy/Desktop/MasterarbeitGitHub/RTutorProcurementAuction/inst/ps/RTutorProcurementAuction' # set to the folder in which this file is stored
+ps.dir =  'C:/Users/Freddy/Desktop/MasterarbeitGitHub/RTutorProcurementAuction/inst/ps/RTutorProcurementAuctio' # set to the folder in which this file is stored
 ps.file = 'RTutorProcurementAuction.Rmd' # set to the name of this file
 user.name = '' # set to your user name
 
@@ -286,7 +286,7 @@ There are five principal assumptions which justify the use of such a linear regr
 **A5**: No exact linear relationship between independent variables and more observations than independent variables.   
 
 If you want to know more about those assumptions you can check Kennedy (2008, p. 42), where it is explained in more detail.  
-Let us now go back to the regression from chapter 2. We assume that our regression satisfies A1, at least in some sense, but what about the others? Checking A2 mathematically is difficult since we do not have information about the disturbance term $\varepsilon_i$. If we use the residuals out of the regression instead we will always get that the expected value is zero due to the mathematics behind the linear squares minimization. A2 is fulfilled if we assume that items ran over or under independent of the bidder winning the auction. These assumptions don't seem too hard and thus we will assume that A2 is fulfilled. A5 is fulfilled as we have only one independent variable but more than $109000$ observations and they do not have an exact linear relationship. A4 also seems to be fulfilled but A3 may not. We can check A3 if we plot the independent variable versus the regressions residuals. If the residuals are distributed around zero the same way for all different values of the independent variable, then A3 is fulfilled. To do so we need to load the data again and perform the same regressions as we did in chapter 2.  
+Let us now go back to the regression from chapter 2. We assume that our regression satisfies A1, at least in some sense, but what about the others? Checking A2 mathematically is difficult since we do not have information about the disturbance term $\varepsilon_i$. If we use the residuals out of the regression instead we will always get that the expected value is zero due to the mathematics behind the linear squares minimization. A2 is fulfilled if we assume that items ran over or under independent of the bidder winning the auction. These assumptions don't seem too hard and thus we will assume that A2 is fulfilled. A5 is fulfilled as we have only one independent variable but more than $109000$ observations and they do not have an exact linear relationship. A4 also seems to be fulfilled but A3 may not. A3 consists of two parts, uniform variance (homoscedasticity) of the error term and uncorrelated errors (no autocorrelation). We exclude the problem of autocorrelation and assume that our errors are not correlated (at least not strongly correlated). To check homoscedasticity we can plot the independent variable versus the regressions residuals. If the residuals are distributed around zero the same way for all different values of the independent variable, then we have homoscedastic errors. To do so we need to load the data again and perform the same regressions as we did in chapter 2.  
 
 **Task:** To read in the data `biditems.dta` and perform the OLS regression as in the chapter before press `edit` and `check` afterwards.
 
@@ -307,7 +307,7 @@ a=which(is.na(dat$NCunitbid)==FALSE)
 plot(dat$pctover_q[a],OLS$residuals,xlim=c(-1.5,8.5),ylim=c(-8,8))
 ```
 
-It became clear that the residuals are not equally distributed around zero (in special for $x \in [-1,2]$). This indicates us that they are not independent identically distributed meaning that A3 is not fulfilled. If A3 is violated we might have a problem with heteroskedasticity or autocorrelated errors. We assume that our errors are not autocorrelated. Thus we may have  a problem with heteroskedasticity and need to find a way to fix that. With heteroskedasticity OLS is still unbiased but it is not efficient anymore. Now one could assume that Calstrans systematically over- or underestimates some items. If so we would have a variable contained in our error term that is different for different items. This would mean that the distribution of the error term is different at least for some items and assumption A3 is violated. Just think of a variable indicating systematic over- or underestimation that right now is a part of our error term. To account for that we can use a fixed effects regression where the fixed effect is within an specific item code. To make this clear I will explain it for our regression. Recall that we want to estimate the following model:
+It became clear that the residuals are not equally distributed around zero (in special for $x \in [-1,2]$). This indicates us that they do not have uniform variance meaning that A3 is not fulfilled. Thus we may have  a problem with heteroskedasticity (that is the absence of homoscedasticity) and need to find a way to fix that. With heteroskedasticity OLS is still unbiased but it is not efficient anymore. Now one could assume that Calstrans systematically over- or underestimates some items. If so we would have a variable contained in our error term that is different for different items. This would mean that the distribution of the error term is different at least for some items and assumption A3 is violated. Just think of a variable indicating systematic over- or underestimation that right now is a part of our error term. To account for that we can use a fixed effects regression where the fixed effect is within an specific item code. To make this clear I will explain it for our regression. Recall that we want to estimate the following model:
 $$\textrm{NCunitbid}^{(n)}_i = \beta_0 + \beta_1 \cdot \textrm{pctover_q}^{(n)}_i + \varepsilon^{(n)}_i$$
 But we think that there is a term that differs among items. To describe this systematic over- or underestimation one can use dummy variables for each item $\delta^{(n)}_{i,j}$ that equal one if there was a over estimation of the item $j$ in contract $n$ for bidder $i$ and zero if not. Then our regression would look as follows:
 $$\textrm{NCunitbid}^{(n)}_i = \beta_0 + \beta_1 \cdot \textrm{pctover_q}^{(n)}_i + \sum_{j \in \textrm{item}} \alpha_j \cdot \delta^{(n)}_{i,j} \varepsilon^{(n)}_i$$
@@ -332,7 +332,7 @@ a=which(is.na(dat$NCunitbid)==FALSE)
 plot(dat$pctover_q[a],FELM$residuals,xlim=c(-1.5,8.5),ylim=c(-8,8))
 ```
 
-The residuals are now equally distributed around zero indicating that we have solved one problem concerning the errors. But as you can see the distribution changes with `pctover_q` so there are still some things influencing the error terms that we did not account for. Let us now compare `OLS` with `FELM`. This can be done with the `reg.summary()` command. Just give both regression objects to this function and separate them with a comma.
+The residuals are now more equally distributed around zero indicating that we have solved one problem concerning the errors. But as you can see the distribution changes with `pctover_q` so there are still some things influencing the error term that we did not account for. Let us now compare `OLS` with `FELM`. This can be done with the `reg.summary()` command. Just give both regression objects to this function and separate them with a comma.
 
 **Task:** Print a summary of the regressions `OLS` and `FELM`.
 
@@ -639,10 +639,10 @@ There is one last measure of market power we want to use. It seems naturally to 
 **Task:** Press `check` to get a first insight if our hypothesis is true. The functions used here are all from the `dplyr` package. If you like to know more about them you can check here: <a href="https://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html" target = "_blank"> cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html</a>.
 
 ```{r "3_3__5"}
-arrange(distinct(transmute(group_by(dat,nbidders),mean_normalized_bid = mean(normalized_bid))))
+arrange(summarize(group_by(dat,nbidders), mean(normalized_bid)))
 ```
 
-We present the average normalized bid for all different numbers of bidders per auction. To do so we use the `group_by()` command to group our data frame by the number of bidders. With `transmute()` we generate a new data frame that only contains the different groups and the average normalized bid for each group. `arrange()` orders our output such that the number of bidders increases in every row.
+We present the average normalized bid for all different numbers of bidders per auction. To do so we use the `group_by()` command to group our data frame by the number of bidders. The `summarize()` command computes the mean of a the column `normalized_bid` for every group of our grouped data frame. In addition it prints out the groups. `arrange()` orders our output such that the number of bidders increases in every row.
 
 
 #! addon__quiz__nbidders
