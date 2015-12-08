@@ -15,7 +15,7 @@ setwd("C:/Users/Freddy/Desktop/MasterarbeitGitHub/RTutorProcurementAuction/inst/
 ps.name = "RTutorProcurementAuction"; sol.file = paste0(ps.name,"_sol.Rmd")
 libs = c("foreign","dplyr","lfe","stargazer","sandwich","XML","leaflet","regtools","AER") # character vector of all packages you load in the problem set
 #name.rmd.chunks(sol.file) # set auto chunk names in this file
-create.ps(sol.file=sol.file, ps.name=ps.name, user.name=NULL,libs=libs, stop.when.finished=FALSE,extra.code.file="f1.R",addons="quiz", use.memoise=TRUE,var.txt.file = "variables.txt", rps.has.sol=FALSE)
+create.ps(sol.file=sol.file, ps.name=ps.name, user.name=NULL,libs=libs, stop.when.finished=FALSE,extra.code.file="f1.R",addons="quiz", use.memoise=TRUE,var.txt.file = "variables.txt", rps.has.sol=TRUE)
 
 
 show.shiny.ps(ps.name, load.sav=FALSE,  sample.solution=FALSE, is.solved=FALSE, catch.errors=TRUE, launch.browser=TRUE)

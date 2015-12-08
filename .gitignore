@@ -47,6 +47,7 @@ Temporary Items
 .apdisk
 
 # R files
+.Rproj.user/B52C3AF9
 .Rproj.user
 .Rhistory
 .RData
